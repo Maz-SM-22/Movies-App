@@ -34,9 +34,19 @@ exports.getCategory = (req, res, next)=> {
 }
 
 exports.searchByTitle = (req, res, next)=> {
-    res.status(200).json({
-        success: true,
-        msg: `Displaying all search results for '${req}'`     // Might need to add to req.query
+    Movie.find({ $text: { $search: req.query.title }}, (err, docs)=> { 
+        if (!docs) {
+            res.status(404).json({
+                success: false, 
+                msg: "Whoops! Looks like there are no movies with this title 🤔"
+            })
+            return; 
+        }
+        res.status(200).json({
+            success: true, 
+            msg: `Displaying all search results for '${req.query.title}'`,
+            movies: docs
+        })
     })
 }
 
