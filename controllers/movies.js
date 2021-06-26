@@ -1,31 +1,58 @@
-// Display all movies 
+const Movie = require('../models/movie'); 
+
 exports.getAllMovies = (req, res, next)=> {
-    res.status(200).json({
-        success: true,
-        msg: 'Displaying all movies'
-    })
+    Movie.find({}, (err, docs)=> {
+        if(!docs) {
+            res.status(404).json({
+                success: false, 
+                msg: "Whoops! Looks like there's nothing to see here 😨", 
+            })
+            return; 
+        }
+        res.status(200).json({
+            success: true, 
+            msg: "Displaying all movies",
+            movies: docs
+        })
+    }); 
 }
 
-// Display all movies by category
 exports.getCategory = (req, res, next)=> {
-    res.status(200).json({
-        success: true,
-        msg: `Displaying all ${req.params.category} movies`
+    Movie.find({ category: req.params.category }, (err, docs)=> {
+        if (!docs) {
+            res.status(404).json({
+                success: false, 
+                msg: "Whoops! Looks like there are no movies for this category 🎞"
+            })
+        }
+        res.status(200).json({
+            success: true, 
+            msg: `Displaying all search results for '${req.params.category}'`,
+            movies: docs
+        })
     })
 }
 
-// Search for movie by title 
-exports.getTitle = (req, res, next)=> {
+exports.searchByTitle = (req, res, next)=> {
     res.status(200).json({
         success: true,
-        msg: `Displaying all search results for '${req.query}'`     // Might need to add to req.query
+        msg: `Displaying all search results for '${req}'`     // Might need to add to req.query
     })
 }
 
-// Get movie by id
-exports.getById = (req, res)=> {
-    res.status(200).json({
-        success: true,
-        msg: `Displaying movies with id ${req.params.id}`
+exports.getById = (req, res, next)=> {
+    Movie.findById(req.params.id, (err, doc)=> {
+        if(!doc) {
+            res.status(404).json({
+                success: false,
+                msg: `No movie found with id '${req.params.id}'`, 
+            })
+            return; 
+        }
+        res.status(200).json({
+            success: true,
+            msg: `Displaying movie with id '${req.params.id}'`, 
+            movie: doc
+        })
     })
 }

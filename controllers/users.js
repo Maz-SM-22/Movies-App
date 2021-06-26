@@ -1,3 +1,5 @@
+const User = require('../models/user'); 
+
 // Display all favourite movies
 exports.getFavourites = (req, res, next)=> {
     // Some logic to fetch user's faves from database and display them 
