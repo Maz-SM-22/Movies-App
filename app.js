@@ -7,6 +7,7 @@ const session = require('express-session');
 const mongoose = require('mongoose'); 
 const MongoStore = require('connect-mongo');
 const passport = require('passport'); 
+const cors = require('cors'); 
 require('./config/passport'); 
 const dbConnect = require('./config/dbConfig'); 
 const app = express(); 
@@ -27,7 +28,8 @@ app.use(session({
     cookie: { maxAge: 86400000 }     // 1 day
 }))
 app.use(passport.initialize()); 
-app.use(passport.session());             
+app.use(passport.session());  
+app.use(cors());            
 
 dbConnect();
 
